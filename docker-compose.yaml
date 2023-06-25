@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+    redis:
+      image: redis:5-alpine
+      volumes:
+        - redis-data:/data
+      expose:
+        - 6379
+
+    tests:
+      build:
+        context: .
+        args:
+          PIPENV_FLAGS: --dev
+      volumes:
+        - .:/app
+      command: pytest -v tests
+
+    app:
+      build:
+        context: .
+      volumes:
+        - .:/app
+      ports:
+      - 8000:8000
+      depends_on:
+        - redis
+      environment:
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+      command: >-
+        uvicorn main:app
+        --host 0.0.0.0
+        --port 8000
+        --log-level debug
+        --reload
+
+volumes:
+  redis-data:

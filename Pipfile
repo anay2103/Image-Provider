@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+mypy = "==1.0.1"
+flake8 = "==6.0.0"
+pytest = "==7.2.1"
+pytest-asyncio = "==0.20.3"
+
+[packages]
+aioredis = "==2.0.1"
+fastapi = {version = "==0.95.0", extras = ["all"]}
+pydantic = {version= "==1.10.8", extras = ["dotenv"]}
+uvicorn = "==0.22.0"
+
+[requires]
+python_version = "3.10"
