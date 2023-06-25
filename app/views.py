@@ -1,5 +1,6 @@
 import json
 import random
+from typing import Set
 
 from fastapi.responses import HTMLResponse
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -16,7 +17,7 @@ router = APIRouter(route_class=Route)
 @router.get('/', summary='Get image', response_class=HTMLResponse)
 async def get_image(
     request: Request,
-    categories: conlist(str, max_items=10) = Query(None, alias='category[]'),
+    categories: conlist(str, max_items=10) = Query(None, alias='category[]'),  # type: ignore
 ) -> HTMLResponse:
     """Получение картинки по категориям. \f
 
@@ -37,7 +38,7 @@ async def get_image(
     available = categories or list(all_categories.keys())
 
     nrow = None
-    seen = set()
+    seen: Set[str] = set()
     while len(available) > len(seen):
         cat = random.choice(available)
         seen.add(cat)
@@ -64,4 +65,4 @@ async def get_image(
     await request.app.state.cache.set(RECENT,  nrow)
     await request.app.state.cache.set(NUMS, json.dumps(nums))
     resp = Template(TEMPLATE).render({'url': url})
-    return resp
+    return HTMLResponse(resp)

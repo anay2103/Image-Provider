@@ -11,7 +11,7 @@ class TestCache:
     __test__ = False
 
     def __init__(self) -> None:
-        self.cache = {}
+        self.cache: Dict[str, Any] = {}
 
     async def get(self, key: str) -> Any:
         return self.cache.get(key)
@@ -54,8 +54,8 @@ def nums():
 @pytest.fixture
 async def app(
     categories: Dict[str, Any],
-    urls: Dict[str, Any],
     nums: List[List[Any]],
+    urls: List[str],
 ) -> FastAPI:
     """Тестовое приложение."""
     from main import app as testapp
@@ -85,8 +85,8 @@ async def test_shows_decrease(
     app: FastAPI,
     client: TestClient,
     categories: Dict[str, Any],
-    urls: Dict[str, Any],
     nums: List[List[Any]],
+    urls: List[str],
 ) -> None:
     """Тест GET / число показов уменьшается."""
     resp = client.get('/', params={'category[]': 'games'})
@@ -104,8 +104,8 @@ async def test_recent_cache(
     app: FastAPI,
     client: TestClient,
     categories: Dict[str, Any],
-    urls: Dict[str, Any],
     nums: List[List[Any]],
+    urls: List[str],
 ) -> None:
     """Тест GET / кэш сохраняется."""
     resp = client.get('/', params={'category[]': 'games'})
@@ -118,8 +118,8 @@ async def test_another_img_if_in_cache(
     app: FastAPI,
     client: TestClient,
     categories: Dict[str, Any],
-    urls: Dict[str, Any],
     nums: List[List[Any]],
+    urls: List[str],
 ) -> None:
     """Тест GET / картинка в кэше не выбирается, если есть другая."""
     old_cache = await app.state.cache.set('recent', 1)  # 1 - индекс url

@@ -12,6 +12,7 @@ class Settings(BaseSettings):
 
     @validator('REDIS_URI', pre=True)
     def build_redis_uri(cls, uri, values: Dict[str, Any]) -> str:
+        """Конструктор адреса Redis."""
         return 'redis://%s:%s' % (values['REDIS_HOST'], values['REDIS_PORT'])
 
     class Config:

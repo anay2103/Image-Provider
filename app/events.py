@@ -43,10 +43,11 @@ async def read_csv(app: FastAPI) -> None:
     category_nums = {v: k for k, v in enumerate(categories_set)}
 
     for i, url in enumerate(url_dict):
-        shows, categories = url_dict[url].values()
-        for cat in categories:
+        url_shows = url_dict[url]['shows']
+        url_categories = url_dict[url]['categories']
+        for cat in url_categories:  # type: ignore
             loc = category_nums[cat]
-            nums[i][loc] = shows
+            nums[i][loc] = url_shows  # type: ignore
 
     await app.state.cache.set(CATEGORIES, json.dumps(category_nums))
     await app.state.cache.set(URLS, json.dumps(list(url_dict.keys())))
